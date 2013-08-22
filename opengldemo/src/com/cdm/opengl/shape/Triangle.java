@@ -72,6 +72,11 @@ public class Triangle {
 		Matrix.rotateM(mMMatrix, 0, xAngle, 1, 0, 0);
 		
 		GLES20.glUniformMatrix4fv(muMVPMatrixHandle, 1, false, Triangle.getFinalMatrix(mMMatrix), 0);
+		GLES20.glVertexAttribPointer(maPositionHandle, 3, GLES20.GL_FLOAT, false, 3*4, mVertexBuffer);
+		GLES20.glVertexAttribPointer(maColorHandle, 4,GLES20.GL_FLOAT, false, 4*4, mColorBuffer);
+		GLES20.glEnableVertexAttribArray(maPositionHandle);
+		GLES20.glEnableVertexAttribArray(maColorHandle);
+		GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vCount);
 	}
 
 }
