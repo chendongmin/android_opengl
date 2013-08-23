@@ -4,6 +4,9 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
+import com.cdm.opengl.util.ShaderUtil;
+import com.cdm.opengl.view.MyTDView;
+
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 
@@ -23,10 +26,22 @@ public class Triangle {
 	FloatBuffer mVertexBuffer;//
 	FloatBuffer mColorBuffer;
 	int vCount = 0;//顶点数量
-	float xAngle = 0;//绕X轴旋转的角度
+	public float xAngle = 0;//绕X轴旋转的角度
 	
-	public Triangle(){
+	public Triangle(MyTDView mv){
 		initVertexData();
+		initShader(mv);
+	}
+	
+	
+	public void initShader(MyTDView mv){
+		mVertexShader = ShaderUtil.loadFromAssertsFile("vertex.sh", mv.getResources());
+		mFragmentShader = ShaderUtil.loadFromAssertsFile("frag.sh", mv.getResources());
+		mProgram = ShaderUtil.createProgram(mVertexShader, mFragmentShader);
+		maPositionHandle = GLES20.glGetAttribLocation(mProgram, "aPosition");
+		maColorHandle = GLES20.glGetAttribLocation(mProgram, "aColor");
+		muMVPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix");
+		
 	}
 	
 	public void initVertexData(){
@@ -44,10 +59,9 @@ public class Triangle {
 		mVertexBuffer.position(0);
 		
 		float colors[] = new float[]{
-				1,1,1,
-				0,0,0,
-				1,0,0,
-				1,0,0
+				1,1,1,0,
+				0,0,1,0,
+				0,1,0,0
 		};
 		
 		ByteBuffer cbb = ByteBuffer.allocateDirect(colors.length*4);
