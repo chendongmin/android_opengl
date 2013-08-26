@@ -6,15 +6,17 @@
 
     <uses-sdk
         android:minSdkVersion="8"
-        android:targetSdkVersion="8" />
+        android:targetSdkVersion="8"/>
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-        <activity android:name=".activity.Sample3.Sample3_1Activity" android:label="@string/app_name">
-             <intent-filter>
+        <activity android:name=".activity.Sample3.Sample3_1Activity" >
+        </activity>
+        <activity android:name="com.cdm.api.activity.ViewPagerActivity" android:label="@string/app_name">
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
