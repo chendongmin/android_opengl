@@ -20,6 +20,10 @@ public class MySurfaceView extends GLSurfaceView {
 
 	public MySurfaceView(Context context) {
 		super(context);
+		this.setEGLContextClientVersion(2); //设置使用OPENGL ES2.0
+        mRenderer = new SceneRenderer();	//创建场景渲染器
+        setRenderer(mRenderer);				//设置渲染器		        
+        setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);//设置渲染模式为主动渲染   
 	}
 	
 	

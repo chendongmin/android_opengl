@@ -9,13 +9,12 @@ import java.util.List;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 
+import com.cdm.opengl.util.ShaderUtil;
 import com.cdm.opengl.view.MySurfaceView;
 
 public class SixPointerStar {
 	
-	public static float[] mProjMatrix = new float[16]; //4X4投影矩阵
-	public static float[] mVMatrix = new float[16];//摄像机位置朝向的参数矩阵
-	public static float[] mMVPMatrix ;//总变换矩阵
+	
 	int mProgram;//自定义渲染管线着色器程序id
 	int muMVPMatrixHandle; //总变换矩阵引用
 	int maPositionHandle; //顶点位置属性引用
@@ -97,7 +96,18 @@ public class SixPointerStar {
 	}
 	
 	public void initShader(MySurfaceView mv){
-		
+		//加载顶点着色器的脚本内容
+        mVertexShader=ShaderUtil.loadFromAssertsFile("vertex.sh", mv.getResources());
+        //加载片元着色器的脚本内容
+        mFragmentShader=ShaderUtil.loadFromAssertsFile("frag.sh", mv.getResources());  
+        //基于顶点着色器与片元着色器创建程序
+        mProgram = ShaderUtil.createProgram(mVertexShader, mFragmentShader);
+        //获取程序中顶点位置属性引用id  
+        maPositionHandle = GLES20.glGetAttribLocation(mProgram, "aPosition");
+        //获取程序中顶点颜色属性引用id  
+        maColorHandle= GLES20.glGetAttribLocation(mProgram, "aColor");
+        //获取程序中总变换矩阵引用id
+        muMVPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix");  
 	}
 	
 	public void drawSelf(){
