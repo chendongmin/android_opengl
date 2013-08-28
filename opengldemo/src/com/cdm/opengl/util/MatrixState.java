@@ -26,6 +26,8 @@ public class MatrixState {
 		mMVPMatrix = new float[16];
 		//将摄像机矩阵乘以变换矩阵
 		Matrix.multiplyMM(mMVPMatrix, 0, mVMatrix, 0, spec, 0);
+		//
+		Matrix.multiplyMM(mMVPMatrix, 0, mProjMatrix, 0, mMVPMatrix, 0);
 		return mMVPMatrix;
 	}
 

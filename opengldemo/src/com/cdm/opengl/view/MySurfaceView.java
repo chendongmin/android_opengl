@@ -29,6 +29,7 @@ public class MySurfaceView extends GLSurfaceView {
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent e) {
+		System.out.println("onTouchEvent");
 		float y = e.getY();
 		float x = e.getX();
 		switch(e.getAction()){
@@ -36,8 +37,8 @@ public class MySurfaceView extends GLSurfaceView {
 			float dy = y - mPreviousY;
 			float dx = x - mPreviousX;
 			for(SixPointerStar star:mRenderer.ha){
-				star.yAngle += dx*TOUCH_SCALE_FACTOR;
-				star.XAngle += dy*TOUCH_SCALE_FACTOR;
+				star.yAngle += dy*TOUCH_SCALE_FACTOR;
+				star.XAngle += dx*TOUCH_SCALE_FACTOR;
 			}
 		}break;
 		}
@@ -52,6 +53,7 @@ public class MySurfaceView extends GLSurfaceView {
 		SixPointerStar[] ha = new SixPointerStar[6];
 		@Override
 		public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+			System.out.println("onSurfaceCreated");
 			GLES20.glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 			for(int i=0;i<ha.length;i++){
 				ha[i] = new SixPointerStar(MySurfaceView.this, 0.2f, 0.5f, -0.3f*i);
@@ -61,6 +63,7 @@ public class MySurfaceView extends GLSurfaceView {
 
 		@Override
 		public void onSurfaceChanged(GL10 gl, int width, int height) {
+			System.out.println("onSurfaceChanged");
 			GLES20.glViewport(0, 0, width, height);
 			float ration = (float)width/height;
 			MatrixState.setProjectOrtho(-ration, ration, -1, 1, 1, 10);
@@ -69,6 +72,7 @@ public class MySurfaceView extends GLSurfaceView {
 
 		@Override
 		public void onDrawFrame(GL10 gl) {
+			//System.out.println("onDrawFrame");
 			GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT|GLES20.GL_COLOR_BUFFER_BIT);
 			for(SixPointerStar star:ha){
 				star.drawSelf();

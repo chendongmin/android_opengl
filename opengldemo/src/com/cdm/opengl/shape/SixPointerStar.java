@@ -9,6 +9,7 @@ import java.util.List;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 
+import com.cdm.opengl.util.MatrixState;
 import com.cdm.opengl.util.ShaderUtil;
 import com.cdm.opengl.view.MySurfaceView;
 
@@ -56,8 +57,8 @@ public class SixPointerStar {
 			flist.add((float)(r*UNIT_SIZE*Math.sin(Math.toRadians(angle+tempAngle/2))));
 			flist.add(z);
 			
-			flist.add((float)(r*UNIT_SIZE*Math.cos(Math.toRadians(angle+tempAngle))));
-			flist.add((float)(r*UNIT_SIZE*Math.sin(Math.toRadians(angle+tempAngle))));
+			flist.add((float)(R*UNIT_SIZE*Math.cos(Math.toRadians(angle+tempAngle))));
+			flist.add((float)(R*UNIT_SIZE*Math.sin(Math.toRadians(angle+tempAngle))));
 			flist.add(z);
 		}
 		vCount = flist.size() / 3;
@@ -117,7 +118,7 @@ public class SixPointerStar {
 		Matrix.rotateM(mMMatrix, 0, yAngle, 0, 1, 0);
 		Matrix.rotateM(mMMatrix, 0, XAngle, 1, 0, 0);
 		
-		GLES20.glUniformMatrix4fv(muMVPMatrixHandle, 1, false, Triangle.getFinalMatrix(mMMatrix), 0);
+		GLES20.glUniformMatrix4fv(muMVPMatrixHandle, 1, false, MatrixState.getFinalMatrix(mMMatrix), 0);
 		GLES20.glVertexAttribPointer(maPositionHandle, 3, GLES20.GL_FLOAT, false, 3*4, mVertexBuffer);
 		GLES20.glVertexAttribPointer(maColorHandle, 4,GLES20.GL_FLOAT, false, 4*4, mColorBuffer);
 		GLES20.glEnableVertexAttribArray(maPositionHandle);
