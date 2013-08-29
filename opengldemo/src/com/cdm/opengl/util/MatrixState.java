@@ -1,5 +1,6 @@
 package com.cdm.opengl.util;
 
+import android.opengl.GLES20;
 import android.opengl.Matrix;
 
 public class MatrixState {
@@ -29,6 +30,14 @@ public class MatrixState {
 		//
 		Matrix.multiplyMM(mMVPMatrix, 0, mProjMatrix, 0, mMVPMatrix, 0);
 		return mMVPMatrix;
+	}
+	
+	public static void setProjectFrustum(
+			float left,float right,
+			float bottom,float top,
+			float near,float far
+			){
+		Matrix.frustumM(mProjMatrix, 0, left, right, bottom, top, near, far);
 	}
 
 }

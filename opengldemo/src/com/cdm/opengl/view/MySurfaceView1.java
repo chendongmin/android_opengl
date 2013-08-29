@@ -3,22 +3,22 @@ package com.cdm.opengl.view;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import com.cdm.opengl.shape.SixPointerStar;
-import com.cdm.opengl.util.MatrixState;
-
 import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.view.MotionEvent;
 
-public class MySurfaceView extends GLSurfaceView {
+import com.cdm.opengl.shape.SixPointerStar;
+import com.cdm.opengl.util.MatrixState;
+
+public class MySurfaceView1 extends GLSurfaceView {
 	
 	private final float TOUCH_SCALE_FACTOR = 180.0f/320;
 	private SceneRenderer mRenderer;
 	private float mPreviousX;
 	private float mPreviousY;
 
-	public MySurfaceView(Context context) {
+	public MySurfaceView1(Context context) {
 		super(context);
 		this.setEGLContextClientVersion(2); //设置使用OPENGL ES2.0
         mRenderer = new SceneRenderer();	//创建场景渲染器
@@ -56,7 +56,8 @@ public class MySurfaceView extends GLSurfaceView {
 			System.out.println("onSurfaceCreated");
 			GLES20.glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 			for(int i=0;i<ha.length;i++){
-				ha[i] = new SixPointerStar(MySurfaceView.this, 0.2f, 0.5f, -0.3f*i);
+				//ha[i] = new SixPointerStar(MySurfaceView1.this, 0.4f, 1.0f, -1.0f*i);
+				ha[i] = new SixPointerStar(MySurfaceView1.this, 0.3f, 0.5f, -0.8f*i);
 			}
 			GLES20.glEnable(GLES20.GL_DEPTH_TEST);
 		}
@@ -66,8 +67,8 @@ public class MySurfaceView extends GLSurfaceView {
 			System.out.println("onSurfaceChanged");
 			GLES20.glViewport(0, 0, width, height);
 			float ration = (float)width/height;
-			MatrixState.setProjectOrtho(-ration, ration, -1, 1, 1, 10);
-			//MatrixState.setProjectFrustum(-ration*0.4f, ration*0.4f, -1*0.4f, 1*0.4f, 1, 50);
+			//MatrixState.setProjectOrtho(-ration, ration, -1, 1, 1, 10);
+			MatrixState.setProjectFrustum(-ration*0.4f, ration*0.4f, -1*0.4f, 1*0.4f, 1, 50);
 			MatrixState.setCamera(0, 0, 3f, 0, 0, 0, 0, 1, 0);
 		}
 

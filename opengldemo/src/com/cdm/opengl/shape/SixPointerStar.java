@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.opengl.GLES20;
+import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 
 import com.cdm.opengl.util.MatrixState;
 import com.cdm.opengl.util.ShaderUtil;
-import com.cdm.opengl.view.MySurfaceView;
 
 public class SixPointerStar {
 	
@@ -32,7 +32,7 @@ public class SixPointerStar {
 	public float XAngle = 0;
 	final float UNIT_SIZE = 1;
 	
-	public SixPointerStar(MySurfaceView mv,float r,float R,float z){
+	public SixPointerStar(GLSurfaceView mv,float r,float R,float z){
 		initVertexData(R, r, z);
 		initShader(mv);
 	}
@@ -96,7 +96,7 @@ public class SixPointerStar {
 		mColorBuffer.position(0);
 	}
 	
-	public void initShader(MySurfaceView mv){
+	public void initShader(GLSurfaceView mv){
 		//加载顶点着色器的脚本内容
         mVertexShader=ShaderUtil.loadFromAssertsFile("vertex.sh", mv.getResources());
         //加载片元着色器的脚本内容

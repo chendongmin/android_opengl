@@ -18,6 +18,8 @@
         <activity android:name="com.cdm.api.activity.ViewPagerActivity" android:label="@string/app_name">
         </activity>
         <activity android:name=".activity.Sample5.Sample5_1Activity" android:label="@string/app_name">
+        </activity>
+         <activity android:name=".activity.Sample5.Sample5_2Activity" android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
