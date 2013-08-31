@@ -67,7 +67,7 @@ public class ShaderUtil {
 		}
 	}
 	
-	public static String loadFromAssertsFile(String fname,Resources r){
+	public static String loadFromAssetsFile(String fname,Resources r){
 		String result = null;
 		InputStream in = null;
 		ByteArrayOutputStream out = null;

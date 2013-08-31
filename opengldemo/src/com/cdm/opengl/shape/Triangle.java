@@ -35,8 +35,8 @@ public class Triangle {
 	
 	
 	public void initShader(MyTDView mv){
-		mVertexShader = ShaderUtil.loadFromAssertsFile("vertex.sh", mv.getResources());
-		mFragmentShader = ShaderUtil.loadFromAssertsFile("frag.sh", mv.getResources());
+		mVertexShader = ShaderUtil.loadFromAssetsFile("vertex.sh", mv.getResources());
+		mFragmentShader = ShaderUtil.loadFromAssetsFile("frag.sh", mv.getResources());
 		mProgram = ShaderUtil.createProgram(mVertexShader, mFragmentShader);
 		maPositionHandle = GLES20.glGetAttribLocation(mProgram, "aPosition");
 		maColorHandle = GLES20.glGetAttribLocation(mProgram, "aColor");

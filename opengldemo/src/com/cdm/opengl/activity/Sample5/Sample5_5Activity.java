@@ -6,11 +6,11 @@ import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.cdm.opengl.view.MySurfaceView2;
+import com.cdm.opengl.view.MySurfaceView4;
 
-public class Sample5_3Activity extends Activity {
+public class Sample5_5Activity extends Activity {
 
-	MySurfaceView2 mview;
+	MySurfaceView4 mview;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -20,7 +20,7 @@ public class Sample5_3Activity extends Activity {
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN ,  
 	              WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		mview = new MySurfaceView2(this);
+		mview = new MySurfaceView4(this);
 		mview.requestFocus();
 		mview.setFocusableInTouchMode(true);
 		setContentView(mview);

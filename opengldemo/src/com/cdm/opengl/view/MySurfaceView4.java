@@ -6,21 +6,19 @@ import javax.microedition.khronos.opengles.GL10;
 import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
-import android.view.MotionEvent;
 
 import com.cdm.opengl.shape.Cube;
-import com.cdm.opengl.shape.SixPointerStar;
 import com.cdm.opengl.util.Constant;
 import com.cdm.opengl.util.MatrixState;
 
-public class MySurfaceView2 extends GLSurfaceView {
+public class MySurfaceView4 extends GLSurfaceView {
 	
 	private final float TOUCH_SCALE_FACTOR = 180.0f/320;
 	private SceneRenderer mRenderer;
 	private float mPreviousX;
 	private float mPreviousY;
 
-	public MySurfaceView2(Context context) {
+	public MySurfaceView4(Context context) {
 		super(context);
 		this.setEGLContextClientVersion(2); //设置使用OPENGL ES2.0
         mRenderer = new SceneRenderer();	//创建场景渲染器
@@ -30,11 +28,12 @@ public class MySurfaceView2 extends GLSurfaceView {
 
 	private class SceneRenderer implements Renderer{
 		Cube cube;
+		float angle = 30;
 		@Override
 		public void onSurfaceCreated(GL10 gl, EGLConfig config) {
 			System.out.println("onSurfaceCreated");
 			GLES20.glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
-			cube = new Cube(MySurfaceView2.this);
+			cube = new Cube(MySurfaceView4.this);
 			GLES20.glEnable(GLES20.GL_DEPTH_TEST);
 			//打开背面剪裁   
 			GLES20.glEnable(GLES20.GL_CULL_FACE);
@@ -64,8 +63,11 @@ public class MySurfaceView2 extends GLSurfaceView {
 			//
 			MatrixState.pushMatrix();
 			MatrixState.translate(4, 0, 0);
+			MatrixState.rotate(angle, 0, 0, 1);
+			MatrixState.scale(0.4f, 2f, 0.6f);
 			cube.drawSelf();
 			MatrixState.popMatrix();
+			angle+=0.4f;
 		}
 		
 	}

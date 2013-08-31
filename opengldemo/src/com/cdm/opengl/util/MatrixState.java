@@ -27,8 +27,8 @@ public class MatrixState {
 	public static void popMatrix(){
 		for(int i=0;i<16;i++){
 			currMatrix[i] = mStack[stackTop][i];
-			stackTop--;
 		}
+		stackTop--;
 	}
 	
 	
@@ -36,8 +36,13 @@ public class MatrixState {
 		Matrix.translateM(currMatrix, 0, x, y, z);
 	}
 	
+	public static void rotate(float angle, float x, float y, float z) {// ÉèÖÃÈÆxyzÖáÒÆ¶¯
+		Matrix.rotateM(currMatrix, 0, angle, x, y, z);
+	}
 	
-	
+	public static void scale(float sx,float sy,float sz){
+		Matrix.scaleM(currMatrix, 0, sx, sy, sz);
+	}
 	
 	public static void setCamera(float cx,float cy,float cz,
 			float tx,float ty,float tz,
