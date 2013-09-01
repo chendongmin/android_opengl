@@ -26,6 +26,8 @@
          <activity android:name=".activity.Sample5.Sample5_4Activity" android:label="@string/app_name">
         </activity>
          <activity android:name=".activity.Sample5.Sample5_5Activity" android:label="@string/app_name">
+        </activity>
+         <activity android:name=".activity.Sample5.Sample5_6Activity" android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
