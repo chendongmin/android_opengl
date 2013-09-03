@@ -6,9 +6,7 @@ import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 
-import com.cdm.opengl.shape.Belt;
 import com.cdm.opengl.shape.Belt5_9;
-import com.cdm.opengl.shape.Circle;
 import com.cdm.opengl.shape.Circle5_9;
 import com.cdm.opengl.util.Constant;
 import com.cdm.opengl.util.MatrixState;

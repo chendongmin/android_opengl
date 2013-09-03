@@ -83,5 +83,10 @@ public class MatrixState {
 			){
 		Matrix.frustumM(mProjMatrix, 0, left, right, bottom, top, near, far);
 	}
+	
+	public static float[] getMMatrix()
+    {       
+        return currMatrix;
+    }
 
 }
