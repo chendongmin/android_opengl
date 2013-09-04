@@ -38,7 +38,9 @@
         <activity android:name=".activity.Sample5.Sample5_10Activity" android:label="@string/app_name">
         </activity>
         <activity android:name=".activity.Sample5.Sample5_11Activity" android:label="@string/app_name">
-            <intent-filter>
+        </activity>
+        <activity android:name=".activity.Sample6.Sample6_1_Activity" android:label="@string/app_name">
+              <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
