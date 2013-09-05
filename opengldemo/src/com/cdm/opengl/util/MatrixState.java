@@ -1,5 +1,9 @@
 package com.cdm.opengl.util;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
+
 import android.opengl.Matrix;
 
 public class MatrixState {
@@ -10,7 +14,12 @@ public class MatrixState {
 	private static float[] mMVPMatrix  = new float[16]; ;
 	static float[][] mStack = new float[10][16];
 	static int stackTop = -1;
-	
+	public static float[] lightLocation = new float[]{0,0,0};
+	public static FloatBuffer lightPositionFB;
+	static ByteBuffer llbbl = ByteBuffer.allocateDirect(3*4);
+	static ByteBuffer llbb= ByteBuffer.allocateDirect(3*4);
+	static float[] cameraLocation=new float[3];//…„œÒª˙Œª÷√
+	public static FloatBuffer cameraFB;
 	
 	public static void setInitStack(){
 		currMatrix = new float[16];
@@ -48,6 +57,16 @@ public class MatrixState {
 			float tx,float ty,float tz,
 			float upx,float upy,float upz){
 		Matrix.setLookAtM(mVMatrix,0, cx, cy, cz, tx, ty, tz, upx, upy, upz);
+		
+		cameraLocation[0]=cx;
+    	cameraLocation[1]=cy;
+    	cameraLocation[2]=cz;
+    	
+    	llbb.clear();
+        llbb.order(ByteOrder.nativeOrder());//…Ë÷√◊÷Ω⁄À≥–Ú
+        cameraFB=llbb.asFloatBuffer();
+        cameraFB.put(cameraLocation);
+        cameraFB.position(0);  
 	}
 	
 	public static void setProjectOrtho(
@@ -88,5 +107,15 @@ public class MatrixState {
     {       
         return currMatrix;
     }
+	
+	public static void setLightLocation(float x,float y,float z){
+		//System.out.println("setLightLocation");
+		llbbl.clear();
+		lightLocation[0]=x;lightLocation[1]=y;lightLocation[2]=z;
+		llbbl.order(ByteOrder.nativeOrder());
+		lightPositionFB =llbbl.asFloatBuffer();
+		lightPositionFB.put(lightLocation);
+		lightPositionFB.position(0);
+	}
 
 }

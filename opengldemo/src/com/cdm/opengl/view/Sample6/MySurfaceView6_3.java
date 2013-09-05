@@ -7,19 +7,20 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.view.MotionEvent;
 
-import com.cdm.opengl.shape.Sample6.Ball;
+import com.cdm.opengl.shape.Sample6.Ball6_3;
 import com.cdm.opengl.util.Constant;
 import com.cdm.opengl.util.MatrixState;
 
-public class MySurfaceView extends GLSurfaceView 
+public class MySurfaceView6_3 extends GLSurfaceView 
 {
 	private final float TOUCH_SCALE_FACTOR = 180.0f/320;//角度缩放比例
     private SceneRenderer mRenderer;//场景渲染器	   
-	Ball ball;//球
+    Ball6_3 ball;//球
+	private float lightOffset=-4;
 	
 	private float mPreviousY;//上次的触控位置Y坐标
     private float mPreviousX;//上次的触控位置X坐标
-	public MySurfaceView(Context context) {
+	public MySurfaceView6_3(Context context) {
         super(context);
         this.setEGLContextClientVersion(2); //设置使用OPENGL ES2.0
         mRenderer = new SceneRenderer();	//创建场景渲染器
@@ -42,6 +43,10 @@ public class MySurfaceView extends GLSurfaceView
         mPreviousX = x;//记录触控笔位置
         return true;
     }
+    
+    public void setLightOffset(float lightOffset) {
+		this.lightOffset = lightOffset;
+	}
 	private class SceneRenderer implements GLSurfaceView.Renderer 
     {
     	
@@ -49,12 +54,23 @@ public class MySurfaceView extends GLSurfaceView
         { 
         	//清除深度缓冲与颜色缓冲
             GLES20.glClear( GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);
+            //System.out.println("onDrawFrame");
+            MatrixState.setLightLocation(lightOffset, 0, 1.5f);
+            //System.out.println("setLightLocation");
             //保护现场
             MatrixState.pushMatrix(); 
             //绘制球
             MatrixState.pushMatrix();
+            MatrixState.translate(-1.2f, 0, 0);
             ball.drawSelf();    
-            MatrixState.popMatrix();       
+            MatrixState.popMatrix();   
+            
+            MatrixState.pushMatrix();
+            MatrixState.translate(1.2f, 0, 0);
+            ball.drawSelf();
+            MatrixState.popMatrix();
+            
+            
             //恢复现场
             MatrixState.popMatrix();
         }  
@@ -65,7 +81,7 @@ public class MySurfaceView extends GLSurfaceView
         	//计算GLSurfaceView的宽高比
             Constant.ratio = (float) width / height;
 			// 调用此方法计算产生透视投影矩阵
-            MatrixState.setProjectFrustum(-Constant.ratio, Constant.ratio, -1, 1, 20, 100);
+            MatrixState.setProjectFrustum(-Constant.ratio, Constant.ratio, -1, 1, 9, 100);
 			// 调用此方法产生摄像机9参数位置矩阵
 			MatrixState.setCamera(0, 0, 30, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
             
@@ -77,7 +93,7 @@ public class MySurfaceView extends GLSurfaceView
             //设置屏幕背景色RGBA
             GLES20.glClearColor(0f,0f,0f, 1.0f);  
             //创建球对象
-            ball=new Ball(MySurfaceView.this);
+            ball=new Ball6_3(MySurfaceView6_3.this);
             //打开深度检测
             GLES20.glEnable(GLES20.GL_DEPTH_TEST);
             //打开背面剪裁   
