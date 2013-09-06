@@ -20,6 +20,19 @@ public class MatrixState {
 	static ByteBuffer llbb= ByteBuffer.allocateDirect(3*4);
 	static float[] cameraLocation=new float[3];//摄像机位置
 	public static FloatBuffer cameraFB;
+	public static float[] lightDirection = new float[]{0,0,1};//定向光
+	public static FloatBuffer lightDirectionFB;
+	
+	
+	public static void setLightDirection(float x,float y,float z){
+		llbbl.clear();
+		lightDirection[0]=x;lightDirection[1]=y;lightDirection[2]=z;
+		llbbl.order(ByteOrder.nativeOrder());
+		lightDirectionFB = llbbl.asFloatBuffer();
+		lightDirectionFB.put(lightDirection);
+		lightDirectionFB.position(0);
+	}
+	
 	
 	public static void setInitStack(){
 		currMatrix = new float[16];
