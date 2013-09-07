@@ -1,18 +1,17 @@
-package com.cdm.opengl.shape.sample7;
-import static com.cdm.opengl.util.ShaderUtil.createProgram;
-
+package com.cdm.opengl.shape.Sample7;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
+import android.opengl.Matrix;
 
 import com.cdm.opengl.util.MatrixState;
 import com.cdm.opengl.util.ShaderUtil;
 
-//纹理三角形
-public class Triangle 
+//纹理矩形
+public class TextureRect 
 {	
 	int mProgram;//自定义渲染管线程序id
     int muMVPMatrixHandle;//总变换矩阵引用id
@@ -20,6 +19,7 @@ public class Triangle
     int maTexCoorHandle; //顶点纹理坐标属性引用id  
     String mVertexShader;//顶点着色器    	 
     String mFragmentShader;//片元着色器
+    static float[] mMMatrix = new float[16];//具体物体的移动旋转矩阵
 	
 	FloatBuffer   mVertexBuffer;//顶点坐标数据缓冲
 	FloatBuffer   mTexCoorBuffer;//顶点纹理坐标数据缓冲
@@ -28,11 +28,19 @@ public class Triangle
     public float yAngle=0;//绕y轴旋转的角度
     public float zAngle=0;//绕z轴旋转的角度
     
-    public Triangle(GLSurfaceView mv)
+    float sRange;//s纹理坐标范围
+    float tRange;//t纹理坐标范围
+    
+    public TextureRect(GLSurfaceView mv,float sRange,float tRange)
     {    	
+    	//设置s纹理坐标范围
+    	this.sRange=sRange;
+    	//设置t纹理坐标范围
+    	this.tRange=tRange;
+    	
     	//初始化顶点坐标与着色数据
     	initVertexData();
-    	//初始化着色器        
+    	//初始化shader        
     	initShader(mv);
     }
     
@@ -40,13 +48,17 @@ public class Triangle
     public void initVertexData()
     {
     	//顶点坐标数据的初始化================begin============================
-        vCount=3;
-        final float UNIT_SIZE=0.15f;
+        vCount=6;
+        final float UNIT_SIZE=0.3f;
         float vertices[]=new float[]
         {
-        	0*UNIT_SIZE,11*UNIT_SIZE,0,
-        	-11*UNIT_SIZE,-11*UNIT_SIZE,0,
-        	11*UNIT_SIZE,-11*UNIT_SIZE,0,
+        	-4*UNIT_SIZE,4*UNIT_SIZE,0,
+        	-4*UNIT_SIZE,-4*UNIT_SIZE,0,
+        	4*UNIT_SIZE,-4*UNIT_SIZE,0,
+        	
+        	4*UNIT_SIZE,-4*UNIT_SIZE,0,
+        	4*UNIT_SIZE,4*UNIT_SIZE,0,
+        	-4*UNIT_SIZE,4*UNIT_SIZE,0
         };
 		
         //创建顶点坐标数据缓冲
@@ -62,11 +74,10 @@ public class Triangle
         
         //顶点纹理坐标数据的初始化================begin============================
         float texCoor[]=new float[]//顶点颜色值数组，每个顶点4个色彩值RGBA
-        {
-        		0.5f,0, 
-        		0,1, 
-        		1,1        		
-        };        
+  	    {
+  	      		0,0, 0,tRange, sRange,tRange,
+  	      		sRange,tRange, sRange,0, 0,0        		
+  	    };  
         //创建顶点纹理坐标数据缓冲
         ByteBuffer cbb = ByteBuffer.allocateDirect(texCoor.length*4);
         cbb.order(ByteOrder.nativeOrder());//设置字节顺序
@@ -79,7 +90,7 @@ public class Triangle
 
     }
 
-    //初始化着色器
+    //初始化shader
     public void initShader(GLSurfaceView mv)
     {
     	//加载顶点着色器的脚本内容
@@ -87,7 +98,7 @@ public class Triangle
         //加载片元着色器的脚本内容
         mFragmentShader=ShaderUtil.loadFromAssetsFile("frag7_1.sh", mv.getResources());  
         //基于顶点着色器与片元着色器创建程序
-        mProgram = createProgram(mVertexShader, mFragmentShader);
+        mProgram = ShaderUtil.createProgram(mVertexShader, mFragmentShader);
         //获取程序中顶点位置属性引用id  
         maPositionHandle = GLES20.glGetAttribLocation(mProgram, "aPosition");
         //获取程序中顶点纹理坐标属性引用id  
@@ -100,20 +111,18 @@ public class Triangle
     {        
     	 //制定使用某套shader程序
     	 GLES20.glUseProgram(mProgram);        
-    	 
-    	 MatrixState.setInitStack();
-    	 
+    	 //初始化变换矩阵
+         Matrix.setRotateM(mMMatrix,0,0,0,1,0);
          //设置沿Z轴正向位移1
-         MatrixState.translate(0, 0, 1);
-         
+         Matrix.translateM(mMMatrix,0,0,0,1);
          //设置绕y轴旋转
-         MatrixState.rotate(yAngle, 0, 1, 0);
+         Matrix.rotateM(mMMatrix,0,yAngle,0,1,0);
          //设置绕z轴旋转
-         MatrixState.rotate(zAngle, 0, 0, 1);  
+         Matrix.rotateM(mMMatrix,0,zAngle,0,0,1);  
          //设置绕x轴旋转
-         MatrixState.rotate(xAngle, 1, 0, 0);
+         Matrix.rotateM(mMMatrix,0,xAngle,1,0,0);
          //将最终变换矩阵传入shader程序
-         GLES20.glUniformMatrix4fv(muMVPMatrixHandle, 1, false, MatrixState.getFinalMatrix(), 0); 
+         GLES20.glUniformMatrix4fv(muMVPMatrixHandle, 1, false, MatrixState.getFinalMatrix(mMMatrix), 0); 
          //为画笔指定顶点位置数据
          GLES20.glVertexAttribPointer  
          (

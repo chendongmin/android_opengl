@@ -1,5 +1,5 @@
 package com.cdm.opengl.activity.Sample7;
-import com.cdm.opengl.view.sample7.MySurfaceView;
+import com.cdm.opengl.view.Sample7.MySurfaceView;
 
 import android.app.Activity;
 import android.content.pm.ActivityInfo;

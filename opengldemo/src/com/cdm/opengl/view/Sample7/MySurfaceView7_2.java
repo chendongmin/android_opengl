@@ -1,4 +1,4 @@
-package com.cdm.opengl.view.sample7;
+package com.cdm.opengl.view.Sample7;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -14,10 +14,10 @@ import android.opengl.GLUtils;
 import android.view.MotionEvent;
 
 import com.cdm.opengl.R;
-import com.cdm.opengl.shape.sample7.Triangle;
+import com.cdm.opengl.shape.Sample7.TextureRect;
 import com.cdm.opengl.util.MatrixState;
 
-public class MySurfaceView extends GLSurfaceView 
+public class MySurfaceView7_2 extends GLSurfaceView 
 {
 	private final float TOUCH_SCALE_FACTOR = 180.0f/320;//角度缩放比例
     private SceneRenderer mRenderer;//场景渲染器
@@ -25,9 +25,14 @@ public class MySurfaceView extends GLSurfaceView
 	private float mPreviousY;//上次的触控位置Y坐标
     private float mPreviousX;//上次的触控位置X坐标
     
-    int textureId;//系统分配的纹理id
+    public int textureCTId;//系统分配的拉伸纹理id
+    public int textureREId;//系统分配的重复纹理id
+    public  int currTextureId;//当前纹理id  
+    
+    TextureRect[] texRect=new TextureRect[3];//纹理矩形数组
+    public int trIndex=2;//当前纹理矩形索引
 	
-	public MySurfaceView(Context context) {
+	public MySurfaceView7_2(Context context) {
         super(context);
         this.setEGLContextClientVersion(2); //设置使用OPENGL ES2.0
         mRenderer = new SceneRenderer();	//创建场景渲染器
@@ -44,8 +49,11 @@ public class MySurfaceView extends GLSurfaceView
         case MotionEvent.ACTION_MOVE:
             float dy = y - mPreviousY;//计算触控笔Y位移
             float dx = x - mPreviousX;//计算触控笔X位移
-            mRenderer.texRect.yAngle += dx * TOUCH_SCALE_FACTOR;//设置纹理矩形绕y轴旋转角度
-            mRenderer.texRect.zAngle+= dy * TOUCH_SCALE_FACTOR;//设置第纹理矩形绕z轴旋转角度
+            for(TextureRect tr:texRect)
+            {
+            	tr.yAngle += dx * TOUCH_SCALE_FACTOR;//设置纹理矩形绕y轴旋转角度
+                tr.zAngle+= dy * TOUCH_SCALE_FACTOR;//设置第纹理矩形绕z轴旋转角度
+            }
         }
         mPreviousY = y;//记录触控笔位置
         mPreviousX = x;//记录触控笔位置
@@ -53,16 +61,13 @@ public class MySurfaceView extends GLSurfaceView
     }
 
 	private class SceneRenderer implements GLSurfaceView.Renderer 
-    {   
-    	Triangle texRect;//纹理矩形
-    	
+    {      	
         public void onDrawFrame(GL10 gl) 
         { 
         	//清除深度缓冲与颜色缓冲
             GLES20.glClear( GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);
-            //绘制纹理矩形
-           // MatrixState.translate(0, 0, -3);
-            texRect.drawSelf(textureId);             
+            //绘制当前纹理矩形
+            texRect[trIndex].drawSelf(currTextureId);             
         }  
 
         public void onSurfaceChanged(GL10 gl, int width, int height) {
@@ -71,47 +76,66 @@ public class MySurfaceView extends GLSurfaceView
         	//计算GLSurfaceView的宽高比
             float ratio = (float) width / height;
             //调用此方法计算产生透视投影矩阵
-            MatrixState.setProjectOrtho(-ratio, ratio, -1, 1, 1f, 15);
+            MatrixState.setProjectFrustum(-ratio, ratio, -1, 1, 1, 10);
             //调用此方法产生摄像机9参数位置矩阵
-            MatrixState.setCamera(0,0,6,0f,0f,0f,0f,1.0f,0.0f);
-            //MatrixState.setInitStack();
+            MatrixState.setCamera(0,0,3,0f,0f,0f,0f,1.0f,0.0f);
         }
 
         public void onSurfaceCreated(GL10 gl, EGLConfig config) {
             //设置屏幕背景色RGBA
             GLES20.glClearColor(0.5f,0.5f,0.5f, 1.0f);  
-            
-            //创建三角形对对象 
-            texRect=new Triangle(MySurfaceView.this);        
+            //创建三个纹理矩形对对象 
+            texRect[0]=new TextureRect(MySurfaceView7_2.this,1,1);  
+            texRect[1]=new TextureRect(MySurfaceView7_2.this,4,2);  
+            texRect[2]=new TextureRect(MySurfaceView7_2.this,4,4);        
             //打开深度检测
-            GLES20.glEnable(GLES20.GL_DEPTH_TEST);
-            //初始化纹理
-            initTexture();
+            GLES20.glEnable(GLES20.GL_DEPTH_TEST);           
+            //初始化系统分配的拉伸纹理id
+            textureCTId=initTexture(false);
+            //初始化系统分配的重复纹理id
+            textureREId=initTexture(true);
+            //初始化当前纹理id
+            currTextureId=textureREId;
             //关闭背面剪裁   
             GLES20.glDisable(GLES20.GL_CULL_FACE);
         }
     }
 	
-	public void initTexture()//textureId
+	//初始化纹理的方法
+	public int initTexture(boolean isRepeat)//textureId
 	{
 		//生成纹理ID
-		int[] textures = new int[1];
+		int[] textures = new int[1];  
 		GLES20.glGenTextures
 		(
 				1,          //产生的纹理id的数量
 				textures,   //纹理id的数组
-				0           //偏移量
+				0           //偏移量 
 		);    
-		textureId=textures[0];    
+		int textureId=textures[0];    
 		GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureId);
+	
 		GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER,GLES20.GL_NEAREST);
 		GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,GLES20.GL_TEXTURE_MAG_FILTER,GLES20.GL_LINEAR);
-		GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S,GLES20.GL_CLAMP_TO_EDGE);
-		GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T,GLES20.GL_CLAMP_TO_EDGE);
+				
+		
+        if(isRepeat)
+        {
+        	GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, 
+        			GLES20.GL_TEXTURE_WRAP_S,GLES20.GL_REPEAT);
+    		GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, 
+    				GLES20.GL_TEXTURE_WRAP_T,GLES20.GL_REPEAT);
+        }
+        else
+        {
+        	GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, 
+        			GLES20.GL_TEXTURE_WRAP_S,GLES20.GL_CLAMP_TO_EDGE);
+    		GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, 
+    				GLES20.GL_TEXTURE_WRAP_T,GLES20.GL_CLAMP_TO_EDGE);
+        }
         
-     
         //通过输入流加载图片===============begin===================
-        InputStream is = this.getResources().openRawResource(R.drawable.wall);
+        InputStream is = this.getResources().openRawResource(R.drawable.robot);
         Bitmap bitmapTmp;
         try 
         {
@@ -139,5 +163,6 @@ public class MySurfaceView extends GLSurfaceView
         		0					  //纹理边框尺寸
         );
         bitmapTmp.recycle(); 		  //纹理加载成功后释放图片
+        return textureId;
 	}
 }
