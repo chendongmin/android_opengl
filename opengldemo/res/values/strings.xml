@@ -4,5 +4,8 @@
     <string name="app_name">com.cdm.opengl</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
+    <string name="bottom_school">学校</string>
+    <string name="msg_school">消息</string>
+     <string name="topic_school">话题</string>
 
 </resources>

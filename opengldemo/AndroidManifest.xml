@@ -56,11 +56,13 @@
         <activity android:name=".activity.Sample6.Sample6_10_Activity" android:label="@string/app_name">
         </activity>
          <activity android:name=".activity.Sample7.MyActivity7_2" android:label="@string/app_name">
+        </activity>
+         <activity android:name="com.cdm.fragment.MainActivity" android:label="@string/app_name">
               <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
+         </activity>
     </application>
 
 </manifest>
